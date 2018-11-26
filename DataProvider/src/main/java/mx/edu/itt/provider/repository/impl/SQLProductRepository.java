@@ -170,7 +170,7 @@ public class SQLProductRepository implements ProductRepository {
 					prod.setType(rs.getInt(4));
 					prod.setBrand(rs.getString(5));
 					
-					Timestamp dt = rs.getTimestamp(4);
+					Timestamp dt = rs.getTimestamp(6);
 					prod.setExpiration(new java.util.Date(dt.getTime()));
 				
 					ret.add(prod);
@@ -207,18 +207,20 @@ public class SQLProductRepository implements ProductRepository {
 			st.setInt(1, id);
         	
         	try (ResultSet rs = st.executeQuery()) {
-	        	rs.next();
-	             
-	            Product prod = new Product();
-	            prod.setName(rs.getString(2));
-				prod.setPrice(rs.getDouble(3));
-				prod.setType(rs.getInt(4));
-				prod.setBrand(rs.getString(5));
-				
-				Timestamp dt = rs.getTimestamp(4);
-				prod.setExpiration(new java.util.Date(dt.getTime()));
-	            
-	            return prod;
+	        	if(rs.next()) {
+		             
+		            Product prod = new Product();
+		            prod.setId(rs.getInt(1));
+		            prod.setName(rs.getString(2));
+					prod.setPrice(rs.getDouble(3));
+					prod.setType(rs.getInt(4));
+					prod.setBrand(rs.getString(5));
+					
+					Timestamp dt = rs.getTimestamp(6);
+					prod.setExpiration(new java.util.Date(dt.getTime()));
+		            
+		            return prod;
+	        	}
         	}
 		} catch (SQLException sqe) {
             LOG.log(Level.SEVERE, "No se pudo almacenar el objeto en la base de datos", sqe);

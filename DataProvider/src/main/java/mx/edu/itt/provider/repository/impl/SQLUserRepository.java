@@ -207,20 +207,22 @@ public class SQLUserRepository implements UserRepository {
 		try (PreparedStatement st = connection.prepareStatement("SELECT * FROM usuario WHERE idusuario = ?")) {
 			st.setInt(1, id);
         	
-        	ResultSet rs = st.executeQuery();
-        	rs.next();
-             
-            User user = new User();
-			user.setId(rs.getInt(1));
-			user.setFirstName(rs.getString(2));
-			user.setLastName(rs.getString(3));
-			user.setBirthDay(rs.getDate(4));
-			user.setPostalcode(rs.getInt(5));
-			user.setCity(rs.getString(6));
-			user.setAddress(rs.getString(7));
-			user.setEmail(rs.getString(8));
-            
-            return user;
+        	try (ResultSet rs = st.executeQuery()) {
+	        	if(rs.next()) {
+		             
+		            User user = new User();
+					user.setId(rs.getInt(1));
+					user.setFirstName(rs.getString(2));
+					user.setLastName(rs.getString(3));
+					user.setBirthDay(rs.getDate(4));
+					user.setPostalcode(rs.getInt(5));
+					user.setCity(rs.getString(6));
+					user.setAddress(rs.getString(7));
+					user.setEmail(rs.getString(8));
+		            
+		            return user;
+	        	}
+        	}
 		} catch (SQLException sqe) {
 			LOG.log(Level.SEVERE, "No se pudo almacenar el objeto en la base de datos", sqe);
 		}
