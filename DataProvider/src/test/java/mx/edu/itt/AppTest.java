@@ -3,6 +3,8 @@ package mx.edu.itt;
 import org.junit.*;
 
 import mx.edu.itt.model.User;
+import mx.edu.itt.provider.repository.UserRepository;
+import mx.edu.itt.provider.repository.impl.MemoryUserRepository;
 import mx.edu.itt.provider.repository.impl.SQLUserRepository;
 import mx.edu.itt.provider.service.UserService;
 import mx.edu.itt.provider.service.impl.UserServiceImpl;
@@ -11,15 +13,16 @@ import mx.edu.itt.provider.service.impl.UserServiceImpl;
  * Unit test for simple App.
  */
 public class AppTest {
-	private static SQLUserRepository repo;
+	private static UserRepository repo;
 	private static UserService service;
     private User newuser;
     private User existinguser;
 
     @BeforeClass
     public static void prepare() {
-        repo = SQLUserRepository.getInstance();
-        repo.connect("jdbc:mysql://localhost/inventariodb?useSSL=false", "root", "");
+        //repo = SQLUserRepository.getInstance();
+        //repo.connect("jdbc:mysql://localhost/inventariodb?useSSL=false", "root", "");
+    	repo = new MemoryUserRepository();
         service = new UserServiceImpl(repo);
     }
     
@@ -32,10 +35,10 @@ public class AppTest {
     	newuser.setEmail("me@hasdaipacheco.com");
     }
     
-    @Test
+    /*@Test
     public void shouldConnectToDataBaseWithUserAndPassword() {
         Assert.assertNotNull(repo.getConnection());
-    }
+    }*/
     
     //@Test
     public void shoudRemoveUserWithId() {
@@ -57,6 +60,6 @@ public class AppTest {
     //@AfterClass
     public static void cleanUp() {
     	repo.clear();
-        repo.disconnect();
+        //repo.disconnect();
     }
 }
